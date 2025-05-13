@@ -115,6 +115,7 @@ public class GameOld implements IGame {
    public boolean handleCorrectAnswer() {
       if (inPenaltyBox[currentPlayer]) {
          if (isGettingOutOfPenaltyBox) {
+            inPenaltyBox[currentPlayer] = false;
             System.out.println("Answer was correct!!!!");
             purses[currentPlayer]++;
             System.out.println(players.get(currentPlayer)
@@ -135,7 +136,7 @@ public class GameOld implements IGame {
 
       } else {
 
-         System.out.println("Answer was corrent!!!!");
+         System.out.println("Answer was correct!!!!");
          purses[currentPlayer]++;
          System.out.println(players.get(currentPlayer)
                             + " now has "
@@ -151,9 +152,11 @@ public class GameOld implements IGame {
    }
 
    public boolean wrongAnswer() {
-      System.out.println("Question was incorrectly answered");
-      System.out.println(players.get(currentPlayer) + " was sent to the penalty box");
-      inPenaltyBox[currentPlayer] = true;
+      if (!inPenaltyBox[currentPlayer] || isGettingOutOfPenaltyBox) {
+         System.out.println("Question was incorrectly answered");
+         System.out.println(players.get(currentPlayer) + " was sent to the penalty box");
+         inPenaltyBox[currentPlayer] = true;
+      }
 
       currentPlayer++;
       if (currentPlayer == players.size()) currentPlayer = 0;
