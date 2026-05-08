@@ -118,7 +118,7 @@ class Game:
                 self._advance_turn()
                 return True
         else:
-            print("Answer was corrent!!!!")
+            print("Answer was correct!!!!")
             return self._award_coin_and_check_win()
 
     def wrong_answer(self):
