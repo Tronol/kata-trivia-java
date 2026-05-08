@@ -18,6 +18,20 @@ class Player:
         self.coins = 0
         self.in_penalty_box = False
 
+    def advance_to(self, roll):
+        self.position += roll
+        if self.position > BOARD_SIZE:
+            self.position -= BOARD_SIZE
+
+    def add_coin(self):
+        self.coins += 1
+
+    def send_to_penalty_box(self):
+        self.in_penalty_box = True
+
+    def has_won(self):
+        return self.coins == WINNING_COINS
+
 
 class Game:
     def __init__(self):
@@ -56,9 +70,7 @@ class Game:
         return self._players[self.current_player]
 
     def _advance_position(self, roll):
-        self._current().position += roll
-        if self._current().position > BOARD_SIZE:
-            self._current().position -= BOARD_SIZE
+        self._current().advance_to(roll)
         print(self._current().name + "'s new location is " + str(self._current().position))
         print("The category is " + self._current_category())
         self._ask_question()
@@ -98,9 +110,9 @@ class Game:
         return CATEGORY_BY_POSITION.get(pos, "Rock")
 
     def _award_coin_and_check_win(self):
-        self._current().coins += 1
+        self._current().add_coin()
         print(self._current().name + " now has " + str(self._current().coins) + " Gold Coins.")
-        winner = self._did_player_win()
+        winner = not self._current().has_won()
         self._advance_turn()
         return winner
 
@@ -119,9 +131,6 @@ class Game:
     def wrong_answer(self):
         print("Question was incorrectly answered")
         print(self._current().name + " was sent to the penalty box")
-        self._current().in_penalty_box = True
+        self._current().send_to_penalty_box()
         self._advance_turn()
         return True
-
-    def _did_player_win(self):
-        return not (self._current().coins == WINNING_COINS)
