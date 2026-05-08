@@ -12,6 +12,7 @@ class GameOld:
         self.science_questions = deque()
         self.sports_questions = deque()
         self.rock_questions = deque()
+        self.geography_questions = deque()
 
         self.current_player = 0
         self.is_getting_out_of_penalty_box = False
@@ -21,6 +22,7 @@ class GameOld:
             self.science_questions.append("Science Question " + str(i))
             self.sports_questions.append("Sports Question " + str(i))
             self.rock_questions.append(self.create_rock_question(i))
+            self.geography_questions.append("Geography Question " + str(i))
 
     def create_rock_question(self, index):
         return "Rock Question " + str(index)
@@ -75,6 +77,8 @@ class GameOld:
             print(self.sports_questions.popleft())
         if self._current_category() == "Rock":
             print(self.rock_questions.popleft())
+        if self._current_category() == "Geography":
+            print(self.geography_questions.popleft())
 
     def _current_category(self):
         if self.places[self.current_player] - 1 == 0: return "Pop"
@@ -86,6 +90,8 @@ class GameOld:
         if self.places[self.current_player] - 1 == 2: return "Sports"
         if self.places[self.current_player] - 1 == 6: return "Sports"
         if self.places[self.current_player] - 1 == 10: return "Sports"
+        if self.places[self.current_player] - 1 == 3: return "Geography"
+        if self.places[self.current_player] - 1 == 7: return "Geography"
         return "Rock"
 
     def handle_correct_answer(self):

@@ -4,12 +4,6 @@ BOARD_SIZE = 12
 WINNING_COINS = 6
 QUESTIONS_PER_CATEGORY = 50
 
-CATEGORY_BY_POSITION = {
-    0: "Pop", 4: "Pop", 8: "Pop",
-    1: "Science", 5: "Science", 9: "Science",
-    2: "Sports", 6: "Sports", 10: "Sports",
-}
-
 
 class Player:
     def __init__(self, name):
@@ -34,7 +28,14 @@ class Player:
 
 
 class QuestionDeck:
-    CATEGORIES = ["Pop", "Science", "Sports", "Rock"]
+    CATEGORIES = ["Pop", "Science", "Sports", "Rock", "Geography"]
+
+    _CATEGORY_BY_POSITION = {
+        0: "Pop", 4: "Pop", 8: "Pop",
+        1: "Science", 5: "Science", 9: "Science",
+        2: "Sports", 6: "Sports", 10: "Sports",
+        3: "Geography", 7: "Geography",
+    }
 
     def __init__(self):
         self._questions = {cat: deque() for cat in self.CATEGORIES}
@@ -43,12 +44,13 @@ class QuestionDeck:
             self._questions["Science"].append("Science Question " + str(i))
             self._questions["Sports"].append("Sports Question " + str(i))
             self._questions["Rock"].append("Rock Question " + str(i))
+            self._questions["Geography"].append("Geography Question " + str(i))
 
     def ask(self, category):
         print(self._questions[category].popleft())
 
     def category_for(self, position):
-        return CATEGORY_BY_POSITION.get(position - 1, "Rock")
+        return self._CATEGORY_BY_POSITION.get(position - 1, "Rock")
 
 
 class Game:
