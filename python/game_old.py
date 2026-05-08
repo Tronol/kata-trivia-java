@@ -30,7 +30,7 @@ class GameOld:
 
     def add(self, player_name):
         idx = self.how_many_players()
-        self.places[idx] = 1
+        self.places[idx] = 0
         self.purses[idx] = 0
         self.in_penalty_box[idx] = False
         self.players.append(player_name)
