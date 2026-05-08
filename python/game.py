@@ -90,16 +90,17 @@ class Game:
         print(self._current().name + " is the current player")
         print("They have rolled a " + str(roll))
 
-        if self._current().in_penalty_box:
-            if roll % 2 != 0:
-                self.is_getting_out_of_penalty_box = True
-                print(self._current().name + " is getting out of the penalty box")
-                self._advance_position(roll)
-            else:
-                print(self._current().name + " is not getting out of the penalty box")
-                self.is_getting_out_of_penalty_box = False
-        else:
+        if not self._current().in_penalty_box:
             self._advance_position(roll)
+            return
+
+        leaving_box = roll % 2 != 0
+        self.is_getting_out_of_penalty_box = leaving_box
+        if leaving_box:
+            print(self._current().name + " is getting out of the penalty box")
+            self._advance_position(roll)
+        else:
+            print(self._current().name + " is not getting out of the penalty box")
 
     def _award_coin_and_check_win(self):
         self._current().add_coin()
@@ -126,7 +127,3 @@ class Game:
         self._current().send_to_penalty_box()
         self._advance_turn()
         return True
-
-    # kept for backward compatibility with test harness
-    def create_rock_question(self, index):
-        return "Rock Question " + str(index)
