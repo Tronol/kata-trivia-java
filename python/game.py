@@ -1,5 +1,9 @@
 from collections import deque
 
+BOARD_SIZE = 12
+WINNING_COINS = 6
+QUESTIONS_PER_CATEGORY = 50
+
 
 class Game:
     def __init__(self):
@@ -16,7 +20,7 @@ class Game:
         self.current_player = 0
         self.is_getting_out_of_penalty_box = False
 
-        for i in range(50):
+        for i in range(QUESTIONS_PER_CATEGORY):
             self.pop_questions.append("Pop Question " + str(i))
             self.science_questions.append("Science Question " + str(i))
             self.sports_questions.append("Sports Question " + str(i))
@@ -50,8 +54,8 @@ class Game:
                 self.is_getting_out_of_penalty_box = True
                 print(self.players[self.current_player] + " is getting out of the penalty box")
                 self._player_positions[self.current_player] = self._player_positions[self.current_player] + roll
-                if self._player_positions[self.current_player] > 12:
-                    self._player_positions[self.current_player] = self._player_positions[self.current_player] - 12
+                if self._player_positions[self.current_player] > BOARD_SIZE:
+                    self._player_positions[self.current_player] = self._player_positions[self.current_player] - BOARD_SIZE
                 print(self.players[self.current_player] + "'s new location is " + str(self._player_positions[self.current_player]))
                 print("The category is " + self._current_category())
                 self._ask_question()
@@ -60,8 +64,8 @@ class Game:
                 self.is_getting_out_of_penalty_box = False
         else:
             self._player_positions[self.current_player] = self._player_positions[self.current_player] + roll
-            if self._player_positions[self.current_player] > 12:
-                self._player_positions[self.current_player] = self._player_positions[self.current_player] - 12
+            if self._player_positions[self.current_player] > BOARD_SIZE:
+                self._player_positions[self.current_player] = self._player_positions[self.current_player] - BOARD_SIZE
             print(self.players[self.current_player] + "'s new location is " + str(self._player_positions[self.current_player]))
             print("The category is " + self._current_category())
             self._ask_question()
@@ -124,4 +128,4 @@ class Game:
         return True
 
     def _did_player_win(self):
-        return not (self._player_coins[self.current_player] == 6)
+        return not (self._player_coins[self.current_player] == WINNING_COINS)
