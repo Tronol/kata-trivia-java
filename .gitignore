@@ -30,3 +30,8 @@ hs_err_pid*
 *.iml
 
 prod/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
