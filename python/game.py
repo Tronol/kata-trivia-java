@@ -33,26 +33,31 @@ class Player:
         return self.coins == WINNING_COINS
 
 
+class QuestionDeck:
+    CATEGORIES = ["Pop", "Science", "Sports", "Rock"]
+
+    def __init__(self):
+        self._questions = {cat: deque() for cat in self.CATEGORIES}
+        for i in range(QUESTIONS_PER_CATEGORY):
+            self._questions["Pop"].append("Pop Question " + str(i))
+            self._questions["Science"].append("Science Question " + str(i))
+            self._questions["Sports"].append("Sports Question " + str(i))
+            self._questions["Rock"].append("Rock Question " + str(i))
+
+    def ask(self, category):
+        print(self._questions[category].popleft())
+
+    def category_for(self, position):
+        return CATEGORY_BY_POSITION.get(position - 1, "Rock")
+
+
 class Game:
     def __init__(self):
         self._players = []
-
-        self.pop_questions = deque()
-        self.science_questions = deque()
-        self.sports_questions = deque()
-        self.rock_questions = deque()
+        self._deck = QuestionDeck()
 
         self.current_player = 0
         self.is_getting_out_of_penalty_box = False
-
-        for i in range(QUESTIONS_PER_CATEGORY):
-            self.pop_questions.append("Pop Question " + str(i))
-            self.science_questions.append("Science Question " + str(i))
-            self.sports_questions.append("Sports Question " + str(i))
-            self.rock_questions.append(self.create_rock_question(i))
-
-    def create_rock_question(self, index):
-        return "Rock Question " + str(index)
 
     def has_enough_players(self):
         return self.how_many_players() >= 2
@@ -72,8 +77,9 @@ class Game:
     def _advance_position(self, roll):
         self._current().advance_to(roll)
         print(self._current().name + "'s new location is " + str(self._current().position))
-        print("The category is " + self._current_category())
-        self._ask_question()
+        category = self._deck.category_for(self._current().position)
+        print("The category is " + category)
+        self._deck.ask(category)
 
     def _advance_turn(self):
         self.current_player += 1
@@ -94,20 +100,6 @@ class Game:
                 self.is_getting_out_of_penalty_box = False
         else:
             self._advance_position(roll)
-
-    def _ask_question(self):
-        category = self._current_category()
-        questions = {
-            "Pop": self.pop_questions,
-            "Science": self.science_questions,
-            "Sports": self.sports_questions,
-            "Rock": self.rock_questions,
-        }
-        print(questions[category].popleft())
-
-    def _current_category(self):
-        pos = self._current().position - 1
-        return CATEGORY_BY_POSITION.get(pos, "Rock")
 
     def _award_coin_and_check_win(self):
         self._current().add_coin()
@@ -134,3 +126,7 @@ class Game:
         self._current().send_to_penalty_box()
         self._advance_turn()
         return True
+
+    # kept for backward compatibility with test harness
+    def create_rock_question(self, index):
+        return "Rock Question " + str(index)
